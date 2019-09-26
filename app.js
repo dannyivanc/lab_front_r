@@ -14,7 +14,7 @@ const laboratoriosRouter = require('./routes/laboratorios');
 
 var app = express();
 
-
+//comit12
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(logger('dev'));
