@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <%-include("partials/headImports") -%>
+  <script src="/adminlte/dist/js/chartsGlobal.js"></script>
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+      <%-include("partials/header") -%>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    
+      <%-include('partials/sidebar',{docente: query.docente}); -%>
+    
+  </aside>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1 >        
+        <span ><i class="fas fa-chalkboard-teacher"></i> PAGINA DE INICIO </span>  
+        <small>USARIO DOCENTE</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li class="active"><i class="fas fa-home"></i> Inicio</li>
+      </ol>
+    </section>
+    
+    <!-- Main content -->
+    <section class="content container-fluid">
+      <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-6 col-lg-offset-1  col-lg-5 col-md-offset-0">
+          
+          <div class="box small-box bg-light-blue">
+            <div class="inner h3">
+              <h3>CURSOS</h3>
+              <p>Todos los cursos asignados</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <a href="/cursos?docente=<%= query.docente%>" class="small-box-footer h4">
+              VER DETALLES <i class="fa fa-chevron-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-10 col-md-6 col-sm-offset-1 col-lg-5 col-md-offset-0">
+          <div class="box small-box bg-green">
+            <div class="inner h3">
+              <h3>ESTUDIANTES</h3>
+              <p>Todos los estudiantes programados</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <a href="/estudiantes?docente=<%= query.docente%>" class="small-box-footer h4">
+              VER DETALLES <i class="fas fa-chevron-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5 col-lg-offset-1 col-sm-offset-1 col-md-offset-0">
+          <div class="box small-box bg-orange ">
+            <div class="inner h3">
+              <h3>GUIAS</h3>
+              
+              <p>Todas mis guias realizadas</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <a href="/guias?docente=<%= query.docente%>" class="small-box-footer h4">
+              VER DETALLES <i class="fas fa-chevron-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-10 col-md-6 col-sm-offset-1 col-lg-5 col-md-offset-0">
+          <div class="box small-box bg-red">
+            <div class="inner h3">
+              <h3>ARCHIVOS</h3>
+              <p>Todos los archivos subidos</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-file"></i>
+            </div>
+            <a href="#" class="small-box-footer h4">
+              VER DETALLES <i class="fas fa-chevron-circle-right"></i>
+            </a>
+          </div>
+        </div>
+
+
+
+        
+        <!-- <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-offset-0 col-md-5 col-lg-4 ">
+          
+          <div class="box box-primary box-solid">
+              <div class="box-header with-border">
+                <h3 class="box-title ">Promedio Global Laboratorios Revisados</h3>
+
+              </div>
+              <div class="box-body">
+                <canvas id="pieChart" style="height:250px;width: 250px"></canvas>
+              </div>
+              
+          </div>
+          
+          </div>
+        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+          
+          <div class="box box-success box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Detalle revision por Curso </h3>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="barChart" style="height:300px;width: 300px"></canvas>
+              </div>
+            </div>
+            
+          </div>
+         
+        </div> -->
+
+
+
+      </div>
+
+      
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+  <%-include("partials/footer") -%>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+
+</div>
+
+</body>
+</html>

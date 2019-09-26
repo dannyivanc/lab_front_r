@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <%-include("partials/headImports") -%>
+  <script src="/javascripts/revisarLab.js"></script>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+      <%-include("partials/header") -%>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <%-include("partials/sidebar",{docente: query.docente}) -%>
+  </aside>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1 >        
+        <span ><i class="fas fa-chalkboard-teacher"></i> REVISION DE LABORATORIO </span>  
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/home?docente=<%= query.docente%>"><i class="fas fa-home"></i> Inicio</a></li>
+        <li class="active">Revisión de laboratorio</li>
+      </ol>
+    </section>
+    
+    <!-- Main content -->
+    <section class="content container-fluid">
+      
+      <div class="row">
+      <%
+      if (result.error){ %>
+        <div class="error-page">
+          <h2 class="headline text-red">500</h2>      
+          <div class="error-content">
+            <h3><i class="fa fa-warning text-red"></i> Oops! Algo va mal.</h3>
+            <p>
+              Descripcion del error : <%= result.error %>
+            </p>
+            <p>
+              Si deseas, puedes <a href="/home?docente=<%= query.docente%>">regresar a la Pagina de inicio</a>
+            </p>    
+            <p>
+              O tambien  puedes <a href="/">regresar a la pagina de inicio de sesion</a>
+            </p>               
+          </div>
+        </div>
+      <%}
+      else{
+        if(result.messageL){  %>
+          <div class="callout callout-info">
+            <h4><%= result.messageL %>!</h4>            
+          </div>
+        <%}else{
+          var est = result.laboratorio.estudiante;
+          var curso = result.laboratorio.guia.curso;
+          var guia = result.laboratorio.guia;
+          var data = result.data
+          let calificacion = 0%>  
+          <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-lg-10 col-md-offset-1 ">
+            <div class="box box-primary">
+              <div class="box-body h5">
+                <ul class="list-group list-group-unbordered">
+                  <li class="list-group-item">
+                    <b>Estudiante</b> <span class="pull-right"><%= est.nombre %></span>
+                  </li>
+                  <li class="list-group-item">
+                      <b>C.I.</b> <span class="pull-right"><%= est.ci %></span>
+                    </li>
+                  <li class="list-group-item">
+                    <b>R.U.</b> <span class="pull-right"><%= est.rud %></span><span id="idEstudiante" style="display: none;" ><%= est._id %></span>
+                  </li>
+                  <li class="list-group-item">
+                      <b>Curso</b> <span class="pull-right"><%= curso.materia.sigla %> GRUPO <%= curso.grupo %></span>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Laboratorio N° </b> <span class="pull-right"><%= guia.numero %></span>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+              
+            
+          </div>
+          <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-lg-10 col-md-offset-1 ">
+            <div class="box box-info">
+              <div class="box-body">
+                  <%- guia.contenidoHtml %>
+                  
+              </div>
+            </div>          
+          </div>
+          <div class="col-xs-12" > 
+            <div class="callout callout-info">
+              
+              <h4>Las respuestas correctas se autocalifican, solo es necesario confirmar la calificacion</h4>
+              <p>Tambien puede cambiar la calificación antes de confirmar</p>
+              <p><i> NOTA: Al cambiar la calificación a un valor mayor a 0, esta ya no se autocalificará</i></p>
+            </div>
+          </div>
+          <%for(var i = 0,len = data.length;i < len; i++){%> 
+            <div class="col-xs-12" >        
+              <div class="box box-success">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Pregunta : <%= i+1%></h3>
+                  <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <%- data[i].pregunta.label %>
+                    </div>
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <label>Respuesta : </label><span class="pull-right"> <b> <%= data[i].respuesta %> </b></span><br>
+                      <label>Respuesta esperada : </label><span class="pull-right"> <b><%= data[i].pregunta.respuesta %></b> </span>
+                    </div>
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <form id="" class="formCalificacion">
+                      <label for="calificacioni">Calificacion / <%= data[i].pregunta.valorS100 %></label>
+                      <div class="form-group">
+                          <input type="number" name="calificacion" min="0" max="<%= data[i].pregunta.valorS100 %>" class="form-control calificacioni" id="<%= data[i]._id %>" placeholder="calificacion" 
+                          <% 
+                          let vP = data[i].pregunta.respuesta ,vR = data[i].respuesta ;
+                          if(vP == vR && data[i].calificacion == 0){
+                            calificacion += data[i].pregunta.valorS100;%>
+                            value = "<%= data[i].pregunta.valorS100 %>"
+                          <% } 
+                          else{
+                            calificacion += data[i].calificacion;%>
+                            value = "<%= data[i].calificacion %>"
+
+                          <%}%>
+                          required>
+                          <!--<span class="input-group-btn"> input-group input-group-sm padre
+                          <button type="submit" class="btn btn-info btn-flat">Confirmar</button>
+                          </span>-->
+                      </div>
+                      </form>
+                    </div>
+                  </div>
+                  
+                </div>
+                <!-- /.box-body -->
+              </div>
+              
+            </div>
+          <%}%>
+
+          <div class="col-xs-12 col-md-6 col-md-offset-2 text-center" > 
+            <div id="calificacionColor" class="small-box <%if(calificacion > 50){%>bg-aqua<%}else{%>bg-red<%}%>">
+              <div class="inner">
+                  <p>Sumatoria Calificacion Total : </p>
+                <h3 id="calificacionTotal"><%= calificacion %> / 100</h3>              
+              </div>            
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6 col-md-offset-2 text-center" > 
+            <div class="small-box <%if(result.laboratorio.nota > 50){%>bg-aqua<%}else{%>bg-red<%}%>">
+              <div class="inner">
+                  <p>Calificacion Total Almacenada: </p>
+                <h3><%= result.laboratorio.nota %> / 100</h3>              
+              </div>            
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-4 col-md-offset-0 text-center" style="padding-top: 3rem" > 
+              <button class="btn btn-lg btn-info confirmarCalificacion" id="<%= result.laboratorio._id %>" >Confirmar Calificación</button>
+          </div>
+        <%}%> 
+      <%}%>  
+      </div>   
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <%-include("partials/footer") -%>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+
+</div>
+</body>
+</html>

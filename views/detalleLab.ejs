@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <%-include("partials/headImports") -%>
+  <style>
+    .respBorder{
+      border: #28a7d0 1px solid;padding-left: 1rem;padding-right: 1rem;border-radius: .5rem
+    }
+  </style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+      <%-include("partials/header") -%>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <%-include("partials/sidebar",{docente: query.docente}) -%>
+  </aside>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1 >        
+        <span ><i class="fas fa-chalkboard-teacher"></i>DETALLE DE LABORATORIO </span>  
+        <small>Estudiante, Guia, Preguntas, Respuestas y Calificación</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/home?docente=<%= query.docente%>"><i class="fas fa-home"></i>Inicio</a></li>
+        <li class="active">Detalle de laboratorio</li>
+      </ol>
+    </section>
+    
+    <!-- Main content -->
+    <section class="content container-fluid">
+      
+      <div class="row">
+      <%
+      if (result.error){ %>
+        <div class="error-page">
+          <h2 class="headline text-red">500</h2>      
+          <div class="error-content">
+            <h3><i class="fa fa-warning text-red"></i> Oops! Algo va mal.</h3>
+            <p>
+              Descripcion del error : <%= result.error %>
+            </p>
+            <p>
+              Si deseas, puedes <a href="/home?docente=<%= query.docente%>">regresar a la Pagina de inicio</a>
+            </p>    
+            <p>
+              O tambien  puedes <a href="/">regresar a la pagina de inicio de sesion</a>
+            </p>               
+          </div>
+        </div>
+      <%}
+      else{
+        if(result.messageL){  %>
+          <div class="callout callout-info">
+            <h4><%= result.messageL %>!</h4>            
+          </div>
+        <%}else{
+          var est = result.laboratorio.estudiante;
+          var curso = result.laboratorio.guia.curso;
+          var guia = result.laboratorio.guia;
+          var data = result.data
+          let calificacion = 0%>  
+          <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-lg-10 col-md-offset-1 ">
+            <div class="box box-primary">
+              <div class="box-body h5">
+                <ul class="list-group list-group-unbordered">
+                  <li class="list-group-item">
+                    <b>Estudiante</b> <span class="pull-right"><%= est.nombre %></span>
+                  </li>
+                  <li class="list-group-item">
+                      <b>C.I.</b> <span class="pull-right"><%= est.ci %></span>
+                    </li>
+                  <li class="list-group-item">
+                    <b>R.U.</b> <span class="pull-right"><%= est.rud %></span>
+                  </li>
+                  <li class="list-group-item">
+                      <b>Curso</b> <span class="pull-right"><%= curso.materia.sigla %> GRUPO <%= curso.grupo %></span>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Laboratorio N° </b> <span class="pull-right"><%= guia.numero %></span>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+              
+            
+          </div>
+          <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-lg-10 col-md-offset-1 ">
+            <div class="box box-info">
+              <div class="box-body">
+                  <%- guia.contenidoHtml %>
+                  
+              </div>
+            </div>          
+          </div>          
+          <%for(var i = 0,len = data.length;i < len; i++){
+            calificacion += data[i].calificacion;%> 
+            <div class="col-xs-12" >        
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Pregunta : <%= i+1%></h3>
+                  <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <%- data[i].pregunta.label %>
+                    </div>
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <span>Respuesta:</span>
+                      
+                      <div class="respBorder">
+                        <span><%= data[i].respuesta %></span>
+                      </div>
+                      
+                        <span>Resp. correcta: </span>
+                      <div class="respBorder">
+                        <span><%= data[i].pregunta.respuesta %></span>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-4 col-md-offset-0">
+                      <div id="calificacionColor" class="small-box bg-aqua-active">
+                        <div class="inner text-center">
+                          <h3><%= data[i].calificacion %>  / <%= data[i].pregunta.valorS100 %></h3>              
+                        </div>            
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+                <!-- /.box-body -->
+              </div>
+              
+            </div>
+          <%}%> 
+          <div class="col-xs-12 col-md-6 col-md-offset-2 text-center" > 
+            <div  class="small-box <%if(calificacion > 50){%>bg-aqua<%}else{%>bg-red<%}%>">
+              <div class="inner">
+                  <p>Calificación Total : </p>
+                <h3 ><%= calificacion %> / 100</h3>              
+              </div>            
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-4 col-md-offset-0 text-center" style="padding-top: 3rem" > 
+              <a class="btn btn-lg btn-success" href="/estudiantes/<%= est._id %>?docente=<%= query.docente%>" ><i class="fas fa-arrow-left"></i> VOLVER</a>
+          </div>
+        <%}%> 
+      <%}%>  
+      </div>   
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <%-include("partials/footer") -%>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+
+</div>
+</body>
+</html>
