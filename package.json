@@ -6,11 +6,12 @@
     "start": "nodemon app.js"
   },
   "dependencies": {
-    "debug": "~2.6.9",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
+    "chart.js": "^2.8.0",
+    "debug": "^2.6.9",
+    "ejs": "^2.6.2",
+    "express": "^4.16.4",
+    "http-errors": "^1.6.3",
+    "morgan": "^1.9.1",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
